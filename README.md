@@ -1,5 +1,5 @@
 # Expense Tracker AI
-
+- https://thriving-kringle-3541c1.netlify.app/
 A modern expense tracking application built with Next.js 14, TypeScript, and Tailwind CSS.
 
 ## Features
