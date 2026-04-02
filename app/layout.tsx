@@ -5,17 +5,18 @@ import './globals.css';
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
-  title: 'ExpenseTracker — Manage Your Finances',
+  title: 'FlowCash — Smart Finance Dashboard',
   description:
-    'A modern, professional expense tracking application to help you manage your personal finances.',
+    'FlowCash is a modern, high-contrast financial management dashboard designed with a soft-tech aesthetic.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.className}>
+    <html lang="en" className={inter.variable}>
       <body>{children}</body>
     </html>
   );

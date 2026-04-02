@@ -5,13 +5,14 @@ import SummaryCards from './SummaryCards';
 import SpendingChart from './SpendingChart';
 import CategoryBadge from './CategoryBadge';
 import { formatCurrency, formatDate } from '@/lib/utils';
-import { ArrowRight, Receipt, Sparkles } from 'lucide-react';
+import { ArrowRight, Cloud, Receipt, Sparkles } from 'lucide-react';
 
 interface DashboardProps {
   expenses: Expense[];
   onAddExpense: () => void;
   onLoadSampleData: () => void;
   onViewAll: () => void;
+  onOpenExportHub: () => void;
 }
 
 export default function Dashboard({
@@ -19,6 +20,7 @@ export default function Dashboard({
   onAddExpense,
   onLoadSampleData,
   onViewAll,
+  onOpenExportHub,
 }: DashboardProps) {
   const recentExpenses = expenses.slice(0, 5);
   const isEmpty = expenses.length === 0;
@@ -35,14 +37,25 @@ export default function Dashboard({
       <div className="bg-white rounded-xl shadow-sm border border-gray-100">
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
           <h3 className="font-semibold text-gray-800 text-sm">Recent Expenses</h3>
-          {expenses.length > 5 && (
-            <button
-              onClick={onViewAll}
-              className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700 font-medium"
-            >
-              View all <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {expenses.length > 0 && (
+              <button
+                onClick={onOpenExportHub}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 rounded-lg transition-colors"
+              >
+                <Cloud className="w-3.5 h-3.5" />
+                Export Hub
+              </button>
+            )}
+            {expenses.length > 5 && (
+              <button
+                onClick={onViewAll}
+                className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+              >
+                View all <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
         </div>
 
         {isEmpty ? (
