@@ -7,6 +7,7 @@ import Dashboard from '@/components/Dashboard';
 import ExpenseList from '@/components/ExpenseList';
 import ExpenseModal from '@/components/ExpenseModal';
 import ExpenseForm from '@/components/ExpenseForm';
+import ExportHub from '@/components/ExportHub';
 import { ExpenseFormData } from '@/lib/types';
 import { generateSampleData } from '@/lib/utils';
 
@@ -21,6 +22,7 @@ export default function HomePage() {
     useExpenses();
   const [view, setView] = useState<View>('dashboard');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isExportHubOpen, setIsExportHubOpen] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [toastCounter, setToastCounter] = useState(0);
 
@@ -81,6 +83,7 @@ export default function HomePage() {
             onAddExpense={() => setIsAddModalOpen(true)}
             onLoadSampleData={handleLoadSampleData}
             onViewAll={() => setView('expenses')}
+            onOpenExportHub={() => setIsExportHubOpen(true)}
           />
         ) : (
           <ExpenseList
@@ -102,6 +105,14 @@ export default function HomePage() {
           onCancel={() => setIsAddModalOpen(false)}
         />
       </ExpenseModal>
+
+      {/* Export Hub */}
+      <ExportHub
+        isOpen={isExportHubOpen}
+        onClose={() => setIsExportHubOpen(false)}
+        expenses={expenses}
+        onToast={showToast}
+      />
 
       {/* Toast notifications */}
       <div
