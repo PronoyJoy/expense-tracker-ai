@@ -6,6 +6,7 @@ import {
   PieChart,
   CreditCard,
   Settings,
+  Download,
 } from 'lucide-react';
 
 type NavItem = {
@@ -18,7 +19,7 @@ const MOBILE_NAV: NavItem[] = [
   { id: 'dashboard', label: 'Home', icon: LayoutDashboard },
   { id: 'transactions', label: 'Txns', icon: ArrowLeftRight },
   { id: 'analytics', label: 'Charts', icon: PieChart },
-  { id: 'cards', label: 'Cards', icon: CreditCard },
+  { id: 'export', label: 'Export', icon: Download },
   { id: 'settings', label: 'Settings', icon: Settings },
 ];
 

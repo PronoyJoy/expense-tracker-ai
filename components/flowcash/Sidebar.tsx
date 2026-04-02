@@ -11,6 +11,7 @@ import {
   CreditCard,
   Bell,
   ChevronRight,
+  Download,
 } from 'lucide-react';
 
 type NavItem = {
@@ -25,6 +26,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'analytics', label: 'Analytics', icon: PieChart },
   { id: 'cards', label: 'Cards', icon: CreditCard },
   { id: 'notifications', label: 'Notifications', icon: Bell },
+  { id: 'export', label: 'Export', icon: Download },
   { id: 'settings', label: 'Settings', icon: Settings },
 ];
 

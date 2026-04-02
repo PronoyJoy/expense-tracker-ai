@@ -13,6 +13,7 @@ import { ExpenseFormData } from '@/lib/types';
 import { CATEGORY_CONFIG } from '@/lib/constants';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { Plus, Bell, Search } from 'lucide-react';
+import ExportHub from '@/components/ExportHub';
 
 interface Toast {
   id: number;
@@ -23,10 +24,19 @@ interface Toast {
 export default function FlowCashDashboard() {
   const { expenses, isLoaded, addExpense, deleteExpense, updateExpense } = useExpenses();
   const [view, setView] = useState('dashboard');
+  const [exportOpen, setExportOpen] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [toastCounter, setToastCounter] = useState(0);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  function handleViewChange(v: string) {
+    if (v === 'export') {
+      setExportOpen(true);
+    } else {
+      setView(v);
+    }
+  }
 
   function showToast(message: string, type: Toast['type'] = 'success') {
     const id = toastCounter + 1;
@@ -64,7 +74,7 @@ export default function FlowCashDashboard() {
   return (
     <div className="min-h-screen bg-[#F5F5F5]">
       {/* Sidebar */}
-      <Sidebar activeView={view} onViewChange={setView} />
+      <Sidebar activeView={view} onViewChange={handleViewChange} />
 
       {/* Main */}
       <div className="lg:pl-[260px] pb-24 lg:pb-0">
@@ -200,7 +210,15 @@ export default function FlowCashDashboard() {
       </div>
 
       {/* Mobile bottom nav */}
-      <MobileNav activeView={view} onViewChange={setView} />
+      <MobileNav activeView={view} onViewChange={handleViewChange} />
+
+      {/* Export Hub modal */}
+      <ExportHub
+        isOpen={exportOpen}
+        onClose={() => setExportOpen(false)}
+        expenses={expenses}
+        onToast={showToast}
+      />
 
       {/* Toast notifications */}
       <div className="fixed bottom-24 lg:bottom-6 right-4 lg:right-6 z-50 flex flex-col gap-2 pointer-events-none" aria-live="polite">
