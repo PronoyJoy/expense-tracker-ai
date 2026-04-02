@@ -9,9 +9,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'FlowCash — Smart Finance Dashboard',
+  title: 'AI Expense Tracker',
   description:
-    'FlowCash is a modern, high-contrast financial management dashboard designed with a soft-tech aesthetic.',
+    'AI Expense Tracker — a modern financial management dashboard to track, analyze, and export your expenses.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

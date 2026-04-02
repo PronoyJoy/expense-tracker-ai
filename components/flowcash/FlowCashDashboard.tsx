@@ -57,7 +57,7 @@ export default function FlowCashDashboard() {
           <div className="w-10 h-10 rounded-2xl bg-black flex items-center justify-center">
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
           </div>
-          <p className="text-[#666666] text-sm font-medium">Loading FlowCash...</p>
+          <p className="text-[#666666] text-sm font-medium">Loading AI Expense Tracker...</p>
         </div>
       </div>
     );

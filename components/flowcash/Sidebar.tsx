@@ -45,7 +45,7 @@ export default function Sidebar({ activeView, onViewChange }: SidebarProps) {
         <div className="w-8 h-8 bg-black rounded-xl flex items-center justify-center">
           <Sparkles className="w-4 h-4 text-white" />
         </div>
-        <span className="text-[20px] font-bold tracking-tight text-black">FlowCash</span>
+        <span className="text-[20px] font-bold tracking-tight text-black">AI EXPENSE TRACKER</span>
       </div>
 
       {/* Nav items */}
