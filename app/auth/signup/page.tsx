@@ -1,25 +1,52 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { Sparkles, Eye, EyeOff, ArrowRight, Loader2, CheckCircle } from 'lucide-react';
+import { Sparkles, Eye, EyeOff, ArrowRight, Loader2, CheckCircle, X } from 'lucide-react';
 import Link from 'next/link';
 
+interface PasswordRule {
+  label: string;
+  test: (p: string) => boolean;
+}
+
+const PASSWORD_RULES: PasswordRule[] = [
+  { label: 'At least 8 characters',        test: (p) => p.length >= 8 },
+  { label: 'One uppercase letter (A–Z)',    test: (p) => /[A-Z]/.test(p) },
+  { label: 'One lowercase letter (a–z)',    test: (p) => /[a-z]/.test(p) },
+  { label: 'One number (0–9)',              test: (p) => /[0-9]/.test(p) },
+  { label: 'One special character (!@#…)', test: (p) => /[^A-Za-z0-9]/.test(p) },
+];
+
+function getStrength(password: string): { score: number; label: string; color: string; bar: string } {
+  const passed = PASSWORD_RULES.filter((r) => r.test(password)).length;
+  if (passed <= 1) return { score: passed, label: 'Very weak',  color: 'text-red-500',    bar: 'bg-red-500' };
+  if (passed === 2) return { score: passed, label: 'Weak',       color: 'text-orange-500', bar: 'bg-orange-500' };
+  if (passed === 3) return { score: passed, label: 'Fair',       color: 'text-amber-500',  bar: 'bg-amber-500' };
+  if (passed === 4) return { score: passed, label: 'Strong',     color: 'text-lime-600',   bar: 'bg-lime-500' };
+  return              { score: passed, label: 'Very strong', color: 'text-emerald-600', bar: 'bg-emerald-500' };
+}
+
 export default function SignupPage() {
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [fullName, setFullName]       = useState('');
+  const [email, setEmail]             = useState('');
+  const [password, setPassword]       = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [done, setDone] = useState(false);
+  const [error, setError]             = useState<string | null>(null);
+  const [loading, setLoading]         = useState(false);
+  const [done, setDone]               = useState(false);
+  const [touched, setTouched]         = useState(false);
+
+  const strength   = useMemo(() => getStrength(password), [password]);
+  const allPassed  = strength.score === PASSWORD_RULES.length;
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    setTouched(true);
 
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters.');
+    if (!allPassed) {
+      setError('Please meet all password requirements before continuing.');
       return;
     }
 
@@ -89,6 +116,7 @@ export default function SignupPage() {
           <p className="text-[#666666] text-sm mb-7">Start tracking your expenses for free</p>
 
           <form onSubmit={handleSignup} className="space-y-4">
+
             {/* Full name */}
             <div>
               <label className="block text-xs font-semibold text-[#333] mb-1.5 uppercase tracking-wide">
@@ -130,9 +158,9 @@ export default function SignupPage() {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => { setPassword(e.target.value); setTouched(true); }}
                   required
-                  placeholder="Min. 6 characters"
+                  placeholder="Create a strong password"
                   className="w-full bg-[#F5F5F5] border border-[#E5E5E5] rounded-2xl px-4 py-3 pr-11 text-sm text-black
                     placeholder-[#AAAAAA] outline-none focus:border-black focus:bg-white transition-all duration-200"
                 />
@@ -144,6 +172,46 @@ export default function SignupPage() {
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
+
+              {/* Strength bar + label */}
+              {touched && password.length > 0 && (
+                <div className="mt-2.5 space-y-2">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-[#AAAAAA]">Password strength</span>
+                    <span className={`text-xs font-semibold ${strength.color}`}>{strength.label}</span>
+                  </div>
+                  <div className="flex gap-1">
+                    {PASSWORD_RULES.map((_, i) => (
+                      <div
+                        key={i}
+                        className={`h-1 flex-1 rounded-full transition-all duration-300
+                          ${i < strength.score ? strength.bar : 'bg-[#E5E5E5]'}`}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Checklist */}
+                  <ul className="space-y-1 pt-1">
+                    {PASSWORD_RULES.map((rule) => {
+                      const pass = rule.test(password);
+                      return (
+                        <li key={rule.label} className="flex items-center gap-2">
+                          <div className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-200
+                            ${pass ? 'bg-emerald-500' : 'bg-[#E5E5E5]'}`}>
+                            {pass
+                              ? <CheckCircle className="w-3 h-3 text-white" />
+                              : <X className="w-2.5 h-2.5 text-[#AAAAAA]" />
+                            }
+                          </div>
+                          <span className={`text-xs transition-colors duration-200 ${pass ? 'text-emerald-600' : 'text-[#999]'}`}>
+                            {rule.label}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
             </div>
 
             {/* Error */}
@@ -156,9 +224,9 @@ export default function SignupPage() {
             {/* Submit */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || (touched && !allPassed)}
               className="w-full bg-black text-white rounded-2xl py-3 text-sm font-semibold flex items-center justify-center gap-2
-                hover:opacity-80 transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                hover:opacity-80 transition-all duration-200 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed mt-2"
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
