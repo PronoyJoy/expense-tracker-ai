@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import { useExpenses } from '@/hooks/useExpenses';
 import Sidebar from './Sidebar';
 import MobileNav from './MobileNav';
@@ -24,6 +25,14 @@ interface Toast {
 export default function FlowCashDashboard() {
   const { expenses, isLoaded, addExpense, deleteExpense, updateExpense } = useExpenses();
   const [view, setView] = useState('dashboard');
+  const [userEmail, setUserEmail] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user?.email) setUserEmail(data.user.email);
+    });
+  }, []);
   const [exportOpen, setExportOpen] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [toastCounter, setToastCounter] = useState(0);
@@ -74,7 +83,7 @@ export default function FlowCashDashboard() {
   return (
     <div className="min-h-screen bg-[#F5F5F5]">
       {/* Sidebar */}
-      <Sidebar activeView={view} onViewChange={handleViewChange} />
+      <Sidebar activeView={view} onViewChange={handleViewChange} userEmail={userEmail} />
 
       {/* Main */}
       <div className="lg:pl-[260px] pb-24 lg:pb-0">

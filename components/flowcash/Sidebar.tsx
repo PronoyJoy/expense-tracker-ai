@@ -11,7 +11,9 @@ import {
   Download,
   ChevronRight,
   Zap,
+  LogOut,
 } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 
 type NavItem = {
   id: string;
@@ -33,9 +35,15 @@ const NAV_ITEMS: NavItem[] = [
 interface SidebarProps {
   activeView: string;
   onViewChange: (view: string) => void;
+  userEmail?: string;
 }
 
-export default function Sidebar({ activeView, onViewChange }: SidebarProps) {
+export default function Sidebar({ activeView, onViewChange, userEmail }: SidebarProps) {
+  async function handleSignOut() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    window.location.href = '/auth/login';
+  }
   return (
     <aside
       className="hidden lg:flex flex-col fixed left-0 top-0 h-full z-40"
@@ -78,6 +86,27 @@ export default function Sidebar({ activeView, onViewChange }: SidebarProps) {
           );
         })}
       </nav>
+
+      {/* User info + sign out */}
+      {userEmail && (
+        <div className="px-4 pb-2">
+          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-500 flex items-center justify-center flex-shrink-0">
+              <span className="text-white text-xs font-bold">
+                {userEmail[0].toUpperCase()}
+              </span>
+            </div>
+            <p className="text-slate-300 text-xs truncate flex-1">{userEmail}</p>
+            <button
+              onClick={handleSignOut}
+              title="Sign out"
+              className="text-slate-500 hover:text-red-400 transition-colors flex-shrink-0"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Upgrade card */}
       <div className="p-4">
