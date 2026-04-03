@@ -35,6 +35,11 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
+  // API routes handle their own auth — never redirect them
+  if (pathname.startsWith('/api')) {
+    return supabaseResponse
+  }
+
   // Unauthenticated user trying to access dashboard → send to login
   if (!user && !pathname.startsWith('/auth')) {
     const loginUrl = request.nextUrl.clone()
