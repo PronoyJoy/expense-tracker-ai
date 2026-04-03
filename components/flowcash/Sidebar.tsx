@@ -88,8 +88,8 @@ export default function Sidebar({ activeView, onViewChange, userEmail }: Sidebar
       </nav>
 
       {/* User info + sign out */}
-      {userEmail && (
-        <div className="px-4 pb-2">
+      <div className="px-4 pb-2 space-y-2">
+        {userEmail && (
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-500 flex items-center justify-center flex-shrink-0">
               <span className="text-white text-xs font-bold">
@@ -97,16 +97,19 @@ export default function Sidebar({ activeView, onViewChange, userEmail }: Sidebar
               </span>
             </div>
             <p className="text-slate-300 text-xs truncate flex-1">{userEmail}</p>
-            <button
-              onClick={handleSignOut}
-              title="Sign out"
-              className="text-slate-500 hover:text-red-400 transition-colors flex-shrink-0"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-            </button>
           </div>
-        </div>
-      )}
+        )}
+        <button
+          onClick={handleSignOut}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
+            text-red-400 hover:bg-red-500/10 transition-all duration-200"
+        >
+          <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center flex-shrink-0">
+            <LogOut className="w-4 h-4" />
+          </div>
+          <span>Sign out</span>
+        </button>
+      </div>
 
       {/* Upgrade card */}
       <div className="p-4">
